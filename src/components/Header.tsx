@@ -38,7 +38,7 @@ const Header: React.FC = () => {
           <Link to="/" className="flex items-center space-x-3">
           <div className="w-40 h-20 flex items-center">
               <img 
-                src="/omni_gratum_logo.png" 
+                src="omni_gratum_logo.png" 
                 alt="Omni Gratum Logo" 
                 className="h-full w-auto object-contain"
               />
