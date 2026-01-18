@@ -11,21 +11,12 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react()
   ].filter(Boolean),
-  base: "./",
+  base: "/",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  build: {
-    outDir: 'dist',
-    assetsDir: 'assets',  // Assets will go to dist/assets/
-    rollupOptions: {
-      output: {
-        assetFileNames: 'assets/[name]-[hash][extname]',
-      }
-    }
-  }
 }));
 // import { defineConfig } from "vite";
 // import react from "@vitejs/plugin-react-swc";
