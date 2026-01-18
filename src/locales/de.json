@@ -1,0 +1,40 @@
+{
+    "nav": {
+      "home": "Startseite",
+      "about": "Über uns",
+      "services": "Leistungen",
+      "area": "Einsatzgebiet",
+      "customers": "Kunden",
+      "contact": "Kontakt",
+      "employeeLogin": "Mitarbeiter Login",
+      "logout": "Abmelden"
+    },
+    "header": {
+      "selectLanguage": "Sprache wählen"
+    },
+    "hero": {
+      "title": "Willkommen bei Omni Gratum",
+      "subtitle": "Ihre Lösung für professionelle Dienstleistungsorganisation"
+    },
+    "about": {
+      "title": "Über uns",
+      "description": "Wir bieten umfassende Lösungen für die Verwaltung und Organisation Ihrer Geschäftsprozesse."
+    },
+    "services": {
+      "title": "Leistungen",
+      "description": "Entdecken Sie unsere vielfältigen Dienstleistungen"
+    },
+    "area": {
+      "title": "Einsatzgebiet",
+      "description": "Wir sind bundesweit tätig"
+    },
+    "customers": {
+      "title": "Unsere Kunden",
+      "description": "Vertrauen Sie auf unsere Erfahrung"
+    },
+    "contact": {
+      "title": "Kontakt",
+      "description": "Nehmen Sie mit uns Kontakt auf"
+    }
+  }
+  

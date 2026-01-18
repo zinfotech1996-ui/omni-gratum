@@ -1,0 +1,40 @@
+{
+    "nav": {
+      "home": "Accueil",
+      "about": "À propos",
+      "services": "Services",
+      "area": "Zone",
+      "customers": "Clients",
+      "contact": "Contact",
+      "employeeLogin": "Connexion Employé",
+      "logout": "Déconnexion"
+    },
+    "header": {
+      "selectLanguage": "Sélectionner la langue"
+    },
+    "hero": {
+      "title": "Bienvenue chez Omni Gratum",
+      "subtitle": "Votre solution pour l'organisation professionnelle des services"
+    },
+    "about": {
+      "title": "À propos",
+      "description": "Nous proposons des solutions complètes pour gérer et organiser vos processus métier."
+    },
+    "services": {
+      "title": "Services",
+      "description": "Découvrez nos services variés"
+    },
+    "area": {
+      "title": "Zone d'opération",
+      "description": "Nous opérons à l'échelle nationale"
+    },
+    "customers": {
+      "title": "Nos clients",
+      "description": "Faites confiance à notre expérience"
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "Contactez-nous"
+    }
+  }
+  

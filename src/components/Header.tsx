@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Menu, X, User, LogOut, Globe } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,12 +16,7 @@ const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, logout } = useAuth();
   const location = useLocation();
-  const { t, i18n } = useTranslation();
-
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
-    localStorage.setItem('language', lng);
-  };
+  const { t, changeLanguage, language } = useLanguage();
 
   const navLinks = [
     { href: '/', label: t('nav.home') },
@@ -50,19 +45,13 @@ const Header: React.FC = () => {
         <div className="flex justify-between items-center h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-          
-      <img 
-                src="omni_gratum_logo.png" 
-                alt="Omni Gratum Logo" 
-                className="h-full w-auto object-contain"
-              />
-            {/* <div className="w-10 h-10 bg-[#ff0f0f] rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-[#ff0f0f] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-xl">OG</span>
             </div>
             <div className="hidden sm:block">
               <span className="text-xl font-bold text-gray-900">Omni Gratum</span>
               <span className="block text-xs text-gray-500">Organizing Services</span>
-            </div> */}
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
@@ -159,19 +148,31 @@ const Header: React.FC = () => {
                 <div className="flex flex-col space-y-2 ml-6">
                   <button
                     onClick={() => { changeLanguage('de'); setMobileMenuOpen(false); }}
-                    className={`text-sm ${i18n.language === 'de' ? 'text-[#ff0f0f] font-medium' : 'text-gray-600'}`}
+                    className={`text-sm ${language === 'de' ? 'text-[#ff0f0f] font-medium' : 'text-gray-600'}`}
                   >
                     🇩🇪 Deutsch
                   </button>
                   <button
                     onClick={() => { changeLanguage('en'); setMobileMenuOpen(false); }}
-                    className={`text-sm ${i18n.language === 'en' ? 'text-[#ff0f0f] font-medium' : 'text-gray-600'}`}
+                    className={`text-sm ${language === 'en' ? 'text-[#ff0f0f] font-medium' : 'text-gray-600'}`}
                   >
                     🇬🇧 English
                   </button>
                   <button
                     onClick={() => { changeLanguage('fr'); setMobileMenuOpen(false); }}
-                    className={`text-sm ${i18n.language === 'fr' ? 'text-[#ff0f0f] font-medium' : 'text-gray-600'}`}
+                    className={`text-sm ${language === 'fr' ? 'text-[#ff0f0f] font-medium' : 'text-gray-600'}`}
+                  >
+                    🇫🇷 Français
+                  </button>
+                  <button
+                    onClick={() => { changeLanguage('en'); setMobileMenuOpen(false); }}
+                    className={`text-sm ${language === 'en' ? 'text-[#ff0f0f] font-medium' : 'text-gray-600'}`}
+                  >
+                    🇬🇧 English
+                  </button>
+                  <button
+                    onClick={() => { changeLanguage('fr'); setMobileMenuOpen(false); }}
+                    className={`text-sm ${language === 'fr' ? 'text-[#ff0f0f] font-medium' : 'text-gray-600'}`}
                   >
                     🇫🇷 Français
                   </button>
