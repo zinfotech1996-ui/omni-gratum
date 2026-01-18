@@ -1,30 +1,21 @@
-'use client';
 
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { useLanguage, LANGUAGES } from '@/contexts/LanguageContext';
-import { Menu, X, User, LogOut, Globe } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Menu, X, User, LogOut } from 'lucide-react';
 
 const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, logout } = useAuth();
   const location = useLocation();
-  const { t, changeLanguage, language } = useLanguage();
 
   const navLinks = [
-    { href: '/', label: t('nav.home') },
-    { href: '/#about', label: t('nav.about') },
-    { href: '/#services', label: t('nav.services') },
-    { href: '/#area', label: t('nav.area') },
-    { href: '/#customers', label: t('nav.customers') },
-    { href: '/#contact', label: t('nav.contact') },
+    { href: '/', label: 'Startseite' },
+    { href: '/#about', label: 'Über uns' },
+    { href: '/#services', label: 'Leistungen' },
+    { href: '/#area', label: 'Einsatzgebiet' },
+    { href: '/#customers', label: 'Kunden' },
+    { href: '/#contact', label: 'Kontakt' },
   ];
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -45,11 +36,20 @@ const Header: React.FC = () => {
         <div className="flex justify-between items-center h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-          <img 
+          <div className="w-40 h-20 flex items-center">
+              <img 
                 src="omni_gratum_logo.png" 
                 alt="Omni Gratum Logo" 
                 className="h-full w-auto object-contain"
               />
+            </div>
+            {/* <div className="w-10 h-10 bg-[#ff0f0f] rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-xl">OG</span>
+            </div> */}
+            {/* <div className="hidden sm:block">
+              <span className="text-xl font-bold text-gray-900">Omni Gratum</span>
+              <span className="block text-xs text-gray-500">Organizing Services</span>
+            </div> */}
           </Link>
 
           {/* Desktop Navigation */}
@@ -66,24 +66,8 @@ const Header: React.FC = () => {
             ))}
           </nav>
 
-          {/* Auth & Language Buttons */}
+          {/* Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* Language Selector */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex items-center space-x-1 text-gray-600 hover:text-[#ff0f0f] transition-colors p-2">
-                  <Globe size={18} />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="max-h-72 overflow-y-auto">
-                {LANGUAGES.map((lang) => (
-                  <DropdownMenuItem key={lang.code} onClick={() => changeLanguage(lang.code)}>
-                    {lang.flag} {lang.name}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
             {user ? (
               <div className="flex items-center space-x-4">
                 <Link
@@ -105,7 +89,7 @@ const Header: React.FC = () => {
                 to="/login"
                 className="bg-[#ff0f0f] text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-colors"
               >
-                {t('nav.employeeLogin')}
+                Mitarbeiter Login
               </Link>
             )}
           </div>
@@ -133,53 +117,34 @@ const Header: React.FC = () => {
                   {link.label}
                 </a>
               ))}
-              <div className="pt-4 border-t space-y-3">
-                {/* Language Selector Mobile */}
-                <div className="flex items-center space-x-2">
-                  <Globe size={18} />
-                  <span className="text-sm font-medium text-gray-600">Language:</span>
-                </div>
-                <div className="flex flex-col space-y-2 ml-6 max-h-48 overflow-y-auto">
-                  {LANGUAGES.map((lang) => (
-                    <button
-                      key={lang.code}
-                      onClick={() => { changeLanguage(lang.code); setMobileMenuOpen(false); }}
-                      className={`text-sm text-left ${language === lang.code ? 'text-[#ff0f0f] font-medium' : 'text-gray-600'}`}
-                    >
-                      {lang.flag} {lang.name}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="pt-2 border-t">
-                  {user ? (
-                    <div className="flex flex-col space-y-3">
-                      <Link
-                        to={user.role === 'admin' ? '/dashboard' : '/portal'}
-                        className="flex items-center space-x-2 text-gray-600"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        <User size={18} />
-                        <span>{user.first_name} {user.last_name}</span>
-                      </Link>
-                      <button
-                        onClick={() => { logout(); setMobileMenuOpen(false); }}
-                        className="flex items-center space-x-2 text-gray-500"
-                      >
-                        <LogOut size={18} />
-                        <span>{t('nav.logout')}</span>
-                      </button>
-                    </div>
-                  ) : (
+              <div className="pt-4 border-t">
+                {user ? (
+                  <div className="flex flex-col space-y-3">
                     <Link
-                      to="/login"
-                      className="block bg-[#ff0f0f] text-white px-5 py-2 rounded-lg text-center font-medium"
+                      to={user.role === 'admin' ? '/dashboard' : '/portal'}
+                      className="flex items-center space-x-2 text-gray-600"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      {t('nav.employeeLogin')}
+                      <User size={18} />
+                      <span>{user.first_name} {user.last_name}</span>
                     </Link>
-                  )}
-                </div>
+                    <button
+                      onClick={() => { logout(); setMobileMenuOpen(false); }}
+                      className="flex items-center space-x-2 text-gray-500"
+                    >
+                      <LogOut size={18} />
+                      <span>Abmelden</span>
+                    </button>
+                  </div>
+                ) : (
+                  <Link
+                    to="/login"
+                    className="block bg-[#ff0f0f] text-white px-5 py-2 rounded-lg text-center font-medium"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Mitarbeiter Login
+                  </Link>
+                )}
               </div>
             </nav>
           </div>
