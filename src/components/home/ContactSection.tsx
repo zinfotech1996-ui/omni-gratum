@@ -74,8 +74,8 @@ const ContactSection: React.FC = () => {
                   <div>
                     <h4 className="font-semibold text-gray-900">Adresse</h4>
                     <p className="text-gray-600 text-sm mt-1">
-                      Musterstraße 1<br />
-                      28857 Syke
+                      Hauptstraße 27<br />
+                      28832 Syke
                     </p>
                   </div>
                 </div>
@@ -87,7 +87,7 @@ const ContactSection: React.FC = () => {
                   <div>
                     <h4 className="font-semibold text-gray-900">Telefon</h4>
                     <a href="tel:+4942421234567" className="text-gray-600 text-sm mt-1 hover:text-[#ff0f0f] transition-colors block">
-                      +49 4242 123 4567
+                    0172-8785324
                     </a>
                   </div>
                 </div>
@@ -99,7 +99,7 @@ const ContactSection: React.FC = () => {
                   <div>
                     <h4 className="font-semibold text-gray-900">E-Mail</h4>
                     <a href="mailto:info@omnigratum.de" className="text-gray-600 text-sm mt-1 hover:text-[#ff0f0f] transition-colors block">
-                      info@omnigratum.de
+                    info@omni-gratum-organizing-services.de
                     </a>
                   </div>
                 </div>
