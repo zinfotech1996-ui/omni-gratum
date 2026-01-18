@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage, LANGUAGES } from '@/contexts/LanguageContext';
 import { Menu, X, User, LogOut, Globe } from 'lucide-react';
 import {
   DropdownMenu,
@@ -45,13 +45,11 @@ const Header: React.FC = () => {
         <div className="flex justify-between items-center h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-[#ff0f0f] rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">OG</span>
-            </div>
-            <div className="hidden sm:block">
-              <span className="text-xl font-bold text-gray-900">Omni Gratum</span>
-              <span className="block text-xs text-gray-500">Organizing Services</span>
-            </div>
+          <img 
+                src="omni_gratum_logo.png" 
+                alt="Omni Gratum Logo" 
+                className="h-full w-auto object-contain"
+              />
           </Link>
 
           {/* Desktop Navigation */}
@@ -77,16 +75,12 @@ const Header: React.FC = () => {
                   <Globe size={18} />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => changeLanguage('de')}>
-                  🇩🇪 Deutsch
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => changeLanguage('en')}>
-                  🇬🇧 English
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => changeLanguage('fr')}>
-                  🇫🇷 Français
-                </DropdownMenuItem>
+              <DropdownMenuContent align="end" className="max-h-72 overflow-y-auto">
+                {LANGUAGES.map((lang) => (
+                  <DropdownMenuItem key={lang.code} onClick={() => changeLanguage(lang.code)}>
+                    {lang.flag} {lang.name}
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -143,39 +137,18 @@ const Header: React.FC = () => {
                 {/* Language Selector Mobile */}
                 <div className="flex items-center space-x-2">
                   <Globe size={18} />
-                  <span className="text-sm font-medium text-gray-600">Sprache:</span>
+                  <span className="text-sm font-medium text-gray-600">Language:</span>
                 </div>
-                <div className="flex flex-col space-y-2 ml-6">
-                  <button
-                    onClick={() => { changeLanguage('de'); setMobileMenuOpen(false); }}
-                    className={`text-sm ${language === 'de' ? 'text-[#ff0f0f] font-medium' : 'text-gray-600'}`}
-                  >
-                    🇩🇪 Deutsch
-                  </button>
-                  <button
-                    onClick={() => { changeLanguage('en'); setMobileMenuOpen(false); }}
-                    className={`text-sm ${language === 'en' ? 'text-[#ff0f0f] font-medium' : 'text-gray-600'}`}
-                  >
-                    🇬🇧 English
-                  </button>
-                  <button
-                    onClick={() => { changeLanguage('fr'); setMobileMenuOpen(false); }}
-                    className={`text-sm ${language === 'fr' ? 'text-[#ff0f0f] font-medium' : 'text-gray-600'}`}
-                  >
-                    🇫🇷 Français
-                  </button>
-                  <button
-                    onClick={() => { changeLanguage('en'); setMobileMenuOpen(false); }}
-                    className={`text-sm ${language === 'en' ? 'text-[#ff0f0f] font-medium' : 'text-gray-600'}`}
-                  >
-                    🇬🇧 English
-                  </button>
-                  <button
-                    onClick={() => { changeLanguage('fr'); setMobileMenuOpen(false); }}
-                    className={`text-sm ${language === 'fr' ? 'text-[#ff0f0f] font-medium' : 'text-gray-600'}`}
-                  >
-                    🇫🇷 Français
-                  </button>
+                <div className="flex flex-col space-y-2 ml-6 max-h-48 overflow-y-auto">
+                  {LANGUAGES.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => { changeLanguage(lang.code); setMobileMenuOpen(false); }}
+                      className={`text-sm text-left ${language === lang.code ? 'text-[#ff0f0f] font-medium' : 'text-gray-600'}`}
+                    >
+                      {lang.flag} {lang.name}
+                    </button>
+                  ))}
                 </div>
 
                 <div className="pt-2 border-t">
