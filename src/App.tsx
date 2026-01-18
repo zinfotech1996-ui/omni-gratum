@@ -11,7 +11,7 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import EmployeePortal from "./pages/EmployeePortal";
-import './lib/i18n'
+
 
 const queryClient = new QueryClient();
 
