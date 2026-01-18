@@ -1,6 +1,7 @@
 {
   "name": "vite_react_shadcn_ts",
   "private": true,
+  "homepage": "https://zinfotech1996-ui.github.io/omni-gratum/",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
