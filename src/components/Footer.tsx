@@ -93,20 +93,20 @@ const Footer: React.FC = () => {
               <li className="flex items-start space-x-3">
                 <MapPin size={18} className="text-[#ff0f0f] mt-0.5 flex-shrink-0" />
                 <span className="text-gray-400 text-sm">
-                  Musterstraße 1<br />
-                  28857 Syke
+                  Hauptstraße 27<br />
+                  28832 Syke
                 </span>
               </li>
               <li className="flex items-center space-x-3">
                 <Phone size={18} className="text-[#ff0f0f] flex-shrink-0" />
                 <a href="tel:+4942421234567" className="text-gray-400 hover:text-white transition-colors text-sm">
-                  +49 4242 123 4567
+                0172-8785324
                 </a>
               </li>
               <li className="flex items-center space-x-3">
                 <Mail size={18} className="text-[#ff0f0f] flex-shrink-0" />
-                <a href="mailto:info@omnigratum.de" className="text-gray-400 hover:text-white transition-colors text-sm">
-                  info@omnigratum.de
+                <a href="mailto:info@omni-gratum-organizing-services.de" className="text-gray-400 hover:text-white transition-colors text-sm">
+                info@omni-gratum-organizing-services.de
                 </a>
               </li>
               <li className="flex items-start space-x-3">
