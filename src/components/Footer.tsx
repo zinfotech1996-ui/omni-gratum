@@ -20,7 +20,7 @@ const Footer: React.FC = () => {
             <div className="flex items-center space-x-3 mb-6">
             <div className="w-40 h-20 flex items-center">
               <img 
-                src="public/omni_gratum_logo_whitebg.jpg" 
+                src="/omni_gratum_logo_whitebg.jpg" 
                 alt="Omni Gratum Logo" 
                 className="h-full w-auto object-contain"
               />
