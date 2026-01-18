@@ -1,31 +1,180 @@
-
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { MapPin, CheckCircle } from 'lucide-react';
 
+interface UseInViewReturn {
+  ref: React.RefObject<HTMLDivElement>;
+  isInView: boolean;
+}
+
+const useInView = (options = {}): UseInViewReturn => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsInView(true);
+        observer.unobserve(entry.target);
+      }
+    }, { threshold: 0.1, ...options });
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) observer.unobserve(ref.current);
+    };
+  }, [options]);
+
+  return { ref, isInView };
+};
+
+interface AnimatedNumberProps {
+  end: number;
+  suffix?: string;
+  duration?: number;
+  isActive: boolean;
+}
+
+const AnimatedNumber: React.FC<AnimatedNumberProps> = ({ end, suffix = '', duration = 2000, isActive }) => {
+  const [displayValue, setDisplayValue] = useState(0);
+
+  useEffect(() => {
+    if (!isActive) return;
+
+    let startTime: number;
+    let animationId: number;
+
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime;
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      setDisplayValue(Math.floor(end * progress));
+
+      if (progress < 1) {
+        animationId = requestAnimationFrame(animate);
+      } else {
+        setDisplayValue(end);
+      }
+    };
+
+    animationId = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationId) cancelAnimationFrame(animationId);
+    };
+  }, [end, duration, isActive]);
+
+  return <>{displayValue}{suffix}</>;
+};
+
 const AreaSection: React.FC = () => {
+  const { ref, isInView } = useInView();
+
   const cities = [
     'Syke', 'Bremen', 'Bassum', 'Twistringen', 'Stuhr', 'Weyhe',
     'Diepholz', 'Sulingen', 'Nienburg', 'Verden', 'Achim', 'Delmenhorst'
   ];
 
   return (
-    <section id="area" className="py-16 lg:py-24 bg-white">
+    <section ref={ref} id="area" className="py-16 lg:py-24 bg-white overflow-hidden">
+      <style>{`
+        @keyframes slideInLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        @keyframes slideInRight {
+          from {
+            opacity: 0;
+            transform: translateX(50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.7;
+          }
+        }
+        .animate-slide-in-left {
+          animation: slideInLeft 0.8s ease-out forwards;
+        }
+        .animate-slide-in-right {
+          animation: slideInRight 0.8s ease-out forwards;
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.8s ease-out forwards;
+        }
+        .animate-scale-in {
+          animation: scaleIn 0.6s ease-out forwards;
+        }
+        .animate-pulse-light {
+          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+      `}</style>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Content */}
           <div>
-            <span className="text-[#ff0f0f] font-semibold text-sm uppercase tracking-wider">Einsatzgebiet</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-6">
+            <span 
+              className={`text-[#ff0f0f] font-semibold text-sm uppercase tracking-wider ${isInView ? 'animate-slide-in-left' : 'opacity-0'}`}
+            >
+              Einsatzgebiet
+            </span>
+            <h2 
+              className={`text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-6 ${isInView ? 'animate-slide-in-left' : 'opacity-0'}`}
+              style={{ animationDelay: '0.1s' }}
+            >
               Ihr Partner in Niedersachsen
             </h2>
-            <p className="text-gray-600 leading-relaxed mb-8">
+            <p 
+              className={`text-gray-600 leading-relaxed mb-8 ${isInView ? 'animate-slide-in-left' : 'opacity-0'}`}
+              style={{ animationDelay: '0.2s' }}
+            >
               Mit Sitz in Syke sind wir in ganz Niedersachsen für Sie im Einsatz. 
               Unser Einzugsgebiet umfasst den Landkreis Diepholz, Bremen und die 
               umliegenden Regionen. Flexibel und zuverlässig – auch bei Ihnen vor Ort.
             </p>
 
             {/* Main Location */}
-            <div className="bg-gray-50 rounded-xl p-6 mb-8">
+            <div 
+              className={`bg-gray-50 rounded-xl p-6 mb-8 ${isInView ? 'animate-scale-in' : 'opacity-0'}`}
+              style={{ animationDelay: '0.3s' }}
+            >
               <div className="flex items-start space-x-4">
                 <div className="w-12 h-12 bg-[#ff0f0f] rounded-xl flex items-center justify-center flex-shrink-0">
                   <MapPin size={24} className="text-white" />
@@ -42,11 +191,15 @@ const AreaSection: React.FC = () => {
             </div>
 
             {/* Cities Grid */}
-            <div>
+            <div className={isInView ? 'animate-fade-in-up' : 'opacity-0'} style={{ animationDelay: '0.4s' }}>
               <h4 className="font-semibold text-gray-900 mb-4">Wir sind aktiv in:</h4>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {cities.map((city, index) => (
-                  <div key={index} className="flex items-center space-x-2">
+                  <div 
+                    key={index} 
+                    className={`flex items-center space-x-2 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}
+                    style={{ animationDelay: `${0.4 + index * 0.05}s` }}
+                  >
                     <CheckCircle size={16} className="text-[#ff0f0f]" />
                     <span className="text-gray-700">{city}</span>
                   </div>
@@ -56,7 +209,10 @@ const AreaSection: React.FC = () => {
           </div>
 
           {/* Map Visualization */}
-          <div className="relative">
+          <div 
+            className={`relative ${isInView ? 'animate-slide-in-right' : 'opacity-0'}`}
+            style={{ animationDelay: '0.2s' }}
+          >
             <div className="bg-gray-100 rounded-2xl p-8 aspect-square flex items-center justify-center">
               {/* Stylized Map */}
               <svg viewBox="0 0 400 400" className="w-full h-full max-w-md">
@@ -107,17 +263,26 @@ const AreaSection: React.FC = () => {
             </div>
 
             {/* Stats Overlay */}
-            <div className="absolute -bottom-4 left-4 right-4 bg-white rounded-xl shadow-lg p-4 flex justify-around">
+            <div 
+              className={`absolute -bottom-4 left-4 right-4 bg-white rounded-xl shadow-lg p-4 flex justify-around ${isInView ? 'animate-scale-in' : 'opacity-0'}`}
+              style={{ animationDelay: '0.5s' }}
+            >
               <div className="text-center">
-                <div className="text-2xl font-bold text-[#ff0f0f]">50+</div>
+                <div className={`text-2xl font-bold text-[#ff0f0f] ${isInView ? 'animate-pulse-light' : ''}`}>
+                  <AnimatedNumber end={50} suffix="+" duration={2000} isActive={isInView} />
+                </div>
                 <div className="text-xs text-gray-500">km Radius</div>
               </div>
               <div className="text-center border-l border-r px-6">
-                <div className="text-2xl font-bold text-[#ff0f0f]">12+</div>
+                <div className={`text-2xl font-bold text-[#ff0f0f] ${isInView ? 'animate-pulse-light' : ''}`}>
+                  <AnimatedNumber end={12} suffix="+" duration={2000} isActive={isInView} />
+                </div>
                 <div className="text-xs text-gray-500">Städte</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-[#ff0f0f]">100%</div>
+                <div className={`text-2xl font-bold text-[#ff0f0f] ${isInView ? 'animate-pulse-light' : ''}`}>
+                  <AnimatedNumber end={100} suffix="%" duration={2000} isActive={isInView} />
+                </div>
                 <div className="text-xs text-gray-500">Flexibel</div>
               </div>
             </div>

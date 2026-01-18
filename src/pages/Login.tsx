@@ -142,13 +142,13 @@ const Login: React.FC = () => {
             </form>
 
             {/* Demo Credentials */}
-            <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+            {/* <div className="mt-8 p-4 bg-gray-50 rounded-lg">
               <p className="text-sm text-gray-600 font-medium mb-2">Demo-Zugangsdaten:</p>
               <p className="text-xs text-gray-500">
                 <strong>Admin:</strong> admin@omnigratum.de / hashed_password_123<br />
                 <strong>Mitarbeiter:</strong> h.weber@omnigratum.de / hashed_password_123
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </main>

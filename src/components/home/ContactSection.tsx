@@ -1,10 +1,48 @@
-
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Send, Phone, Mail, MapPin, Clock, CheckCircle, AlertCircle } from 'lucide-react';
-import { api } from '@/lib/api';
+
+interface UseInViewReturn {
+  ref: React.RefObject<HTMLDivElement>;
+  isInView: boolean;
+}
+
+const useInView = (options = {}): UseInViewReturn => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsInView(true);
+        observer.unobserve(entry.target);
+      }
+    }, { threshold: 0.1, ...options });
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) observer.unobserve(ref.current);
+    };
+  }, [options]);
+
+  return { ref, isInView };
+};
+
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  service_interest: string;
+  message: string;
+}
 
 const ContactSection: React.FC = () => {
-  const [formData, setFormData] = useState({
+  const { ref, isInView } = useInView();
+  
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     phone: '',
@@ -28,7 +66,12 @@ const ContactSection: React.FC = () => {
     setSubmitStatus('idle');
 
     try {
-      await api.createInquiry(formData);
+      // Replace with your actual API call
+      // await api.createInquiry(formData);
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
       setSubmitStatus('success');
       setFormData({
         name: '',
@@ -46,15 +89,80 @@ const ContactSection: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-16 lg:py-24 bg-white">
+    <section ref={ref} id="contact" className="py-16 lg:py-24 bg-white overflow-hidden">
+      <style>{`
+        @keyframes slideInLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        @keyframes slideInRight {
+          from {
+            opacity: 0;
+            transform: translateX(50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        .animate-slide-in-left {
+          animation: slideInLeft 0.8s ease-out forwards;
+        }
+        .animate-slide-in-right {
+          animation: slideInRight 0.8s ease-out forwards;
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.8s ease-out forwards;
+        }
+        .animate-scale-in {
+          animation: scaleIn 0.6s ease-out forwards;
+        }
+      `}</style>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 lg:mb-16">
-          <span className="text-[#ff0f0f] font-semibold text-sm uppercase tracking-wider">Kontakt</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4">
+          <span 
+            className={`text-[#ff0f0f] font-semibold text-sm uppercase tracking-wider ${isInView ? 'animate-slide-in-left' : 'opacity-0'}`}
+          >
+            Kontakt
+          </span>
+          <h2 
+            className={`text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}
+            style={{ animationDelay: '0.1s' }}
+          >
             Jetzt unverbindlich anfragen
           </h2>
-          <p className="text-gray-600 text-lg">
+          <p 
+            className={`text-gray-600 text-lg ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}
+            style={{ animationDelay: '0.2s' }}
+          >
             Haben Sie Fragen oder möchten Sie ein Angebot? 
             Kontaktieren Sie uns – wir melden uns schnellstmöglich bei Ihnen.
           </p>
@@ -62,7 +170,10 @@ const ContactSection: React.FC = () => {
 
         <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
           {/* Contact Info */}
-          <div className="lg:col-span-1">
+          <div 
+            className={`lg:col-span-1 ${isInView ? 'animate-slide-in-left' : 'opacity-0'}`}
+            style={{ animationDelay: '0.3s' }}
+          >
             <div className="bg-gray-50 rounded-2xl p-8">
               <h3 className="text-xl font-bold text-gray-900 mb-6">Kontaktdaten</h3>
               
@@ -86,8 +197,8 @@ const ContactSection: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900">Telefon</h4>
-                    <a href="tel:+4942421234567" className="text-gray-600 text-sm mt-1 hover:text-[#ff0f0f] transition-colors block">
-                    0172-8785324
+                    <a href="tel:+4917287853244" className="text-gray-600 text-sm mt-1 hover:text-[#ff0f0f] transition-colors block">
+                      0172-8785324
                     </a>
                   </div>
                 </div>
@@ -98,8 +209,8 @@ const ContactSection: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900">E-Mail</h4>
-                    <a href="mailto:info@omnigratum.de" className="text-gray-600 text-sm mt-1 hover:text-[#ff0f0f] transition-colors block">
-                    info@omni-gratum-organizing-services.de
+                    <a href="mailto:info@omni-gratum-organizing-services.de" className="text-gray-600 text-sm mt-1 hover:text-[#ff0f0f] transition-colors block">
+                      info@omni-gratum-organizing-services.de
                     </a>
                   </div>
                 </div>
@@ -121,19 +232,22 @@ const ContactSection: React.FC = () => {
           </div>
 
           {/* Contact Form */}
-          <div className="lg:col-span-2">
+          <div 
+            className={`lg:col-span-2 ${isInView ? 'animate-slide-in-right' : 'opacity-0'}`}
+            style={{ animationDelay: '0.3s' }}
+          >
             <form onSubmit={handleSubmit} className="bg-gray-50 rounded-2xl p-8">
               <h3 className="text-xl font-bold text-gray-900 mb-6">Anfrage senden</h3>
 
               {submitStatus === 'success' && (
-                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center space-x-3">
+                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center space-x-3 animate-fade-in-up">
                   <CheckCircle size={20} className="text-green-600" />
                   <span className="text-green-800">Vielen Dank! Ihre Anfrage wurde erfolgreich gesendet.</span>
                 </div>
               )}
 
               {submitStatus === 'error' && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center space-x-3">
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center space-x-3 animate-fade-in-up">
                   <AlertCircle size={20} className="text-red-600" />
                   <span className="text-red-800">Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.</span>
                 </div>

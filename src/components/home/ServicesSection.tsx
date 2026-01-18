@@ -1,8 +1,37 @@
-
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Building2, TreeDeciduous, Wrench, ArrowRight, Check } from 'lucide-react';
 
+interface UseInViewReturn {
+  ref: React.RefObject<HTMLDivElement>;
+  isInView: boolean;
+}
+
+const useInView = (options = {}): UseInViewReturn => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsInView(true);
+        observer.unobserve(entry.target);
+      }
+    }, { threshold: 0.1, ...options });
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) observer.unobserve(ref.current);
+    };
+  }, [options]);
+
+  return { ref, isInView };
+};
+
 const ServicesSection: React.FC = () => {
+  const { ref, isInView } = useInView();
   const [activeService, setActiveService] = useState(0);
 
   const services = [
@@ -61,22 +90,77 @@ const ServicesSection: React.FC = () => {
   };
 
   return (
-    <section id="services" className="py-16 lg:py-24 bg-gray-50">
+    <section ref={ref} id="services" className="py-16 lg:py-24 bg-gray-50 overflow-hidden">
+      <style>{`
+        @keyframes slideInLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        .animate-slide-in-left {
+          animation: slideInLeft 0.8s ease-out forwards;
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.8s ease-out forwards;
+        }
+        .animate-scale-in {
+          animation: scaleIn 0.6s ease-out forwards;
+        }
+      `}</style>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 lg:mb-16">
-          <span className="text-[#ff0f0f] font-semibold text-sm uppercase tracking-wider">Unsere Leistungen</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4">
+          <span 
+            className={`text-[#ff0f0f] font-semibold text-sm uppercase tracking-wider ${isInView ? 'animate-slide-in-left' : 'opacity-0'}`}
+          >
+            Unsere Leistungen
+          </span>
+          <h2 
+            className={`text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}
+            style={{ animationDelay: '0.1s' }}
+          >
             Drei Bereiche. Eine Qualität.
           </h2>
-          <p className="text-gray-600 text-lg">
+          <p 
+            className={`text-gray-600 text-lg ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}
+            style={{ animationDelay: '0.2s' }}
+          >
             Von der Gebäudereinigung über Gartenpflege bis zum Hausmeisterservice – 
             wir bieten Ihnen alle Dienstleistungen aus einer Hand.
           </p>
         </div>
 
         {/* Service Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
+        <div 
+          className={`flex flex-wrap justify-center gap-4 mb-12 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}
+          style={{ animationDelay: '0.3s' }}
+        >
           {services.map((service, index) => (
             <button
               key={index}
@@ -94,14 +178,17 @@ const ServicesSection: React.FC = () => {
         </div>
 
         {/* Active Service Detail */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div 
+          className={`bg-white rounded-2xl shadow-xl overflow-hidden ${isInView ? 'animate-scale-in' : 'opacity-0'}`}
+          style={{ animationDelay: '0.4s' }}
+        >
           <div className="grid lg:grid-cols-2">
             {/* Image */}
             <div className="relative h-64 lg:h-auto">
               <img
                 src={services[activeService].image}
                 alt={services[activeService].title}
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent lg:hidden"></div>
             </div>
